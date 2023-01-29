@@ -41,13 +41,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_rssh_file_stem() {
-        assert_eq!("rssh", Path::new("rssh.rs").file_stem().unwrap());
-        // assert_eq!("foo", Path::new("foo.rs").file_stem().unwrap());
-        // assert_eq!("foo.tar", Path::new("foo.tar.gz").file_stem().unwrap());
-    }
-
-    #[test]
     fn link_up() {
         let sh = Shell::new().unwrap();
         let bin = std::path::Path::new("/home/lloyd/bin");
@@ -71,5 +64,18 @@ mod tests {
             // The `link` path will be a symbolic link pointing to the `original` path.
             std::os::unix::fs::symlink(abs_path, dest).unwrap();
         }
+    }
+
+    #[test]
+    fn it_rssh_file_stem() {
+        assert_eq!(
+            "rssh",
+            Path::new("rssh.rs")
+                .file_stem()
+                .context(anyhow!(
+                    "Should extract the stem (non-extension) portion of [`self.file_name`]."
+                ))
+                .unwrap()
+        );
     }
 }
