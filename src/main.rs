@@ -8,6 +8,9 @@ use anyhow::{anyhow, Context};
 use rssh::{build_link, COMMANDS};
 use xshell::Shell;
 
+// FIXME:
+// Looks like linking build_link works when in the projects directory.
+
 fn main() -> anyhow::Result<()> {
     if let true = env::args().into_iter().find(|a| a == "rssh").is_some() {
         build_link().context(anyhow!("Called `rssh` to symlink COMMANDS with rssh binary"))?;

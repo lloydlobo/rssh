@@ -14,7 +14,8 @@ xshell = "0.2.3"
 panic = "abort"
 
 [profile.release]
-panic = "abort"
-lto = true
-
-# [[bin]]
+panic = "abort" # abort rather than inwind which removes extra unwinding code
+lto = true # Enable link time optimization
+strip = true # Automatically strip symbols from the binary (major impact)
+opt-level = "z" # Optimize for size
+codegen-units = 1 # Reduce parallel code generation units
