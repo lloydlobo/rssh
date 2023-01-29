@@ -8,8 +8,10 @@ use anyhow::{anyhow, Context};
 use rssh::{build_link, COMMANDS};
 use xshell::Shell;
 
-// FIXME:
+// NOTE:
 // Looks like linking build_link works when in the projects directory.
+// * fixed: `let src = &"./target/release/rssh";`
+// * with: `let src = &"/home/lloyd/.cargo/bin/rssh";`
 
 fn main() -> anyhow::Result<()> {
     if let true = env::args().into_iter().find(|a| a == "rssh").is_some() {
