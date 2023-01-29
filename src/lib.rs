@@ -23,7 +23,8 @@ pub fn build_link() -> anyhow::Result<()> {
 
     let sh = Shell::new()?;
     let bin = Path::new("/home/lloyd/bin");
-    let src = &"./target/release/rssh";
+    // let src = &"./target/release/rssh";
+    let src = &"/home/lloyd/.cargo/bin/rssh";
 
     for &(cmd, _) in COMMANDS {
         let dst: PathBuf = bin.join(cmd);
