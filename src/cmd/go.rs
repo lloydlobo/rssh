@@ -11,6 +11,9 @@ pub fn run(sh: &Shell) -> anyhow::Result<()> {
         "tmp" => cmd!(sh, "nvim /home/lloyd/Documents/tmp.md").run()?,
         "notes" => cmd!(sh, "nvim /home/lloyd/Documents/02-areas/notes.md").run()?,
 
+        // zoxide? Doesn't work.
+        "p" => cmd!(sh, "zoxide query /home/lloyd/Documents/01-projects/").run()?,
+
         // Unknown
         dest => anyhow::bail!("unknown destination: `{}`", dest),
     }
