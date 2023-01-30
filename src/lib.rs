@@ -13,7 +13,7 @@ pub use crate::cmd::*;
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     // ("ammend", ammend::run),
     // ("autostart", autostart::run),
-    // ("commit", commit::run),
+    ("commit", commit::run),
     ("go", go::run),
     // ("script", script::run),
 ];

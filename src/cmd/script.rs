@@ -1,7 +1,4 @@
-use xshell::{
-    cmd,
-    Shell,
-};
+use xshell::{cmd, Shell};
 
 pub fn run(sh: &Shell) -> anyhow::Result<()> {
     let args = std::env::args().skip(1);
