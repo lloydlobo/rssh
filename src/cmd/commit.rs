@@ -1,5 +1,18 @@
 use xshell::{cmd, Shell};
 
+/// # Usage
+///
+/// * `optional message` - Commit message.
+///
+/// ```bash
+/// $ commit 'fix: fix something'
+/// ```
+///
+/// * `optional -b,--branch branch` - Move all changes out of the way as a commit onto a new branch.
+///
+/// ```bash
+/// $ commit -b feat_new_branch 'feat: add some new feature'
+/// ```
 pub fn run(sh: &Shell) -> anyhow::Result<()> {
     let flags = xflags::parse_or_exit! {
         /// Commit message.
