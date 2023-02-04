@@ -4,7 +4,7 @@ use xshell::{cmd, Shell};
 ///
 /// * `required dest` - Destination to "go to".
 ///
-/// ```bash
+/// ```sh
 /// $ go notes
 /// ```
 ///
@@ -15,8 +15,8 @@ use xshell::{cmd, Shell};
 ///
 /// # Errors
 ///
-/// This function will return an error if the `dest` flag is an unkown `dest` i.e. not hardcoded in
-/// the set of available `dest` destinations.
+/// This function will return an error if the `dest` flag is an unkown `dest`,
+/// i.e. not hardcoded in the set of available `dest` destinations.
 pub fn run(sh: &Shell) -> anyhow::Result<()> {
     let flags = xflags::parse_or_exit! {required dest: String};
     match flags.dest.as_str() {
