@@ -11,7 +11,7 @@ use xshell::{cmd, Shell};
 pub use crate::cmd::*;
 
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
-    // ("ammend", ammend::run),
+    ("amend", amend::run),   // git commit --amend --no-edit
     ("commit", commit::run), // git commit
     ("gg", gg::run),         // gitui
     ("go", go::run),         // go to
