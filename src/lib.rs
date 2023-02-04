@@ -13,9 +13,9 @@ pub use crate::cmd::*;
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     // ("ammend", ammend::run),
     // ("autostart", autostart::run),
-    ("commit", commit::run),
-    ("go", go::run),
-    // ("script", script::run),
+    ("commit", commit::run), // git commit
+    ("gg", gg::run),         // GitGui
+    ("go", go::run),         // go to
 ];
 
 pub fn build_link() -> anyhow::Result<()> {
