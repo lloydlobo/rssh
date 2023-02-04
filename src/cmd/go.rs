@@ -1,18 +1,28 @@
 use xshell::{cmd, Shell};
 
-// * `xshell::Cmd::run()` - By default the command itself is echoed to stderr, its standard streams
-//   are inherited, and non-zero return code is considered an error. These behaviors can be
-//   overridden by using various builder methods of the [`Cmd`].
+/// # Usage
+///
+/// * `required dest` - Destination to "go to".
+///
+/// ```bash
+/// $ go notes
+/// ```
+///
+/// # Available `dest`
+///
+/// * `notes` - `$EDITOR notes.md`
+/// * `tmp` - `$EDITOR tmp.md`
+///
+/// # Errors
+///
+/// This function will return an error if the `dest` flag is an unkown `dest` i.e. not hardcoded in
+/// the set of available `dest` destinations.
 pub fn run(sh: &Shell) -> anyhow::Result<()> {
-    // println!("current_dir: {}", std::env::current_dir().unwrap().display());
     let flags = xflags::parse_or_exit! {required dest: String};
     match flags.dest.as_str() {
         // nvim - $EDITOR
-        "tmp" => cmd!(sh, "nvim /home/lloyd/Documents/tmp.md").run()?,
-        "notes" => cmd!(sh, "nvim /home/lloyd/Documents/02-areas/notes.md").run()?,
-
-        // zoxide? Doesn't work.
-        "p" => cmd!(sh, "zoxide query /home/lloyd/Documents/01-projects/").run()?,
+        "notes" => cmd!(sh, "nvim /home/lloyd/p/notes.md").run()?,
+        "tmp" => cmd!(sh, "nvim /home/lloyd/p/tmp.md").run()?,
 
         // Unknown
         dest => anyhow::bail!("unknown destination: `{}`", dest),
