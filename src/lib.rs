@@ -12,9 +12,8 @@ pub use crate::cmd::*;
 
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     // ("ammend", ammend::run),
-    // ("autostart", autostart::run),
     ("commit", commit::run), // git commit
-    ("gg", gg::run),         // GitGui
+    ("gg", gg::run),         // gitui
     ("go", go::run),         // go to
 ];
 
