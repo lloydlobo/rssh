@@ -1,5 +1,7 @@
 use xshell::{cmd, Shell};
 
+/// Add all changes and commit with message or "."
+///
 /// # Usage
 ///
 /// * `optional message` - Commit message.

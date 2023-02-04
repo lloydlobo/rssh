@@ -1,5 +1,10 @@
 use xshell::{cmd, Shell};
 
+/// Amend a commit without changing commit message.
+///
+/// # Errors
+///
+/// This function will return an error if `cmd!` fails to run.
 pub fn run(sh: &Shell) -> anyhow::Result<()> {
     cmd!(sh, "git add . ").run()?;
     cmd!(sh, "git --no-pager diff --cached --color=always").run()?;

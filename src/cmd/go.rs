@@ -1,5 +1,7 @@
 use xshell::{cmd, Shell};
 
+/// Go & open note in the default editor.
+///
 /// # Usage
 ///
 /// * `required dest` - Destination to "go to".

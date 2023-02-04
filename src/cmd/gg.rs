@@ -2,6 +2,8 @@
 
 use xshell::{cmd, Shell};
 
+/// Open gitui a git tui in the current directory.
+///
 /// # Usage
 ///
 /// * `optional args` - Arguments passed to `gitui`.
