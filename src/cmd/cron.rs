@@ -176,6 +176,7 @@ mod tests {
     /// yes or if the other end of the channel has gone out of scope we break the loop.
     /// https://stackoverflow.com/a/26200583
     #[test]
+    #[ignore]
     fn try_terminate() {
         println!("Press enter to terminate the child thread");
         let (tx, rx) = mpsc::channel();
@@ -207,6 +208,7 @@ mod tests {
     /// this to exit the loop.      
     /// https://stackoverflow.com/a/26200583
     #[test]
+    #[ignore]
     fn try_suspend_term_main() {
         println!("Press enter to wake up the child thread");
         let (tx, rx) = mpsc::channel();

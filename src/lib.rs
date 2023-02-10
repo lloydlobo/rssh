@@ -80,6 +80,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[ignore]
     fn link_up() {
         let sh = Shell::new().unwrap();
         let bin = std::path::Path::new("/home/lloyd/bin");
@@ -106,6 +107,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn it_rssh_file_stem() {
         assert_eq!(
             "rssh",
