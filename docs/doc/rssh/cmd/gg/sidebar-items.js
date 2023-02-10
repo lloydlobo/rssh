@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["run","Open gitui a git tui in the current directory."]]};

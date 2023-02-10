@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["run","Amend a commit without changing commit message."]]};

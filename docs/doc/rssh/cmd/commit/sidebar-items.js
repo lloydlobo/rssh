@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":[["run","Add all changes and commit with message or “.”"]]};
