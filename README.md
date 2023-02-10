@@ -41,7 +41,7 @@ cargo build --release
 Use perf record to capture performance data:
 
 ```sh
-perf record -g --call-graph dwarf target/release/the-program
+perf record -g --call-graph dwarf target/release/rssh
 ```
 
 Use perf report to analyze the performance data:
