@@ -31,7 +31,7 @@ pub fn build_link() -> anyhow::Result<()> {
         sh.remove_path(&dst).unwrap();
 
         let _ = cmd!(sh, "git rm {dst} -f").ignore_stderr().quiet().run();
-        sh.hard_link(&src, &dst).map_err(|err| anyhow!("{:#?}", err)).unwrap();
+        sh.hard_link(src, &dst).map_err(|err| anyhow!("{:#?}", err)).unwrap();
         println!("=> Hardlinked: src: {} to dst: {:#?}", &src, &dst);
     }
 

@@ -9,7 +9,7 @@ use rssh::{build_link, COMMANDS};
 use xshell::Shell;
 
 fn main() -> anyhow::Result<()> {
-    if let true = env::args().into_iter().find(|a| a == "rssh").is_some() {
+    if let true = env::args().any(|a| &a == "rssh") {
         build_link().context(anyhow!("Called `rssh` to symlink COMMANDS with rssh binary"))?;
         std::process::exit(0)
     }
