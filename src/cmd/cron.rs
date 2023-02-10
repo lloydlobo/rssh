@@ -1,9 +1,93 @@
-//! The code is a Rust program that runs a given shell utility using cron syntax to schedule the
-//! execution. The program parses the command line arguments to get the utility to run and the cron
-//! expression (if provided), and then creates a Schedule value from the expression string. If the
-//! expression string is not provided, a default value is used, which runs the command every 10
-//! seconds. If the expression string is invalid, the program prints a default values chart and an
-//! ASCII art illustration of the cron syntax, and returns an error message.!
+//! # `cron` is a Command Line Utility for Running a Task According to a Schedule
+//!
+//! This module provides a simple implementation of a command line utility for scheduling a task to
+//! run at specific times. The task to be run and the schedule are specified as command line
+//! arguments.
+//! The utility uses the [job_scheduler_ng](https://crates.io/crates/job_scheduler_ng) crate to schedule the task.
+//!
+//! ## Overview
+//!
+//! The utility takes two command line arguments:
+//! - `utility` - the name of the task to run
+//! - `expression` - a cron-style expression that specifies the schedule for running the task.
+//!
+//! ## Features
+//!
+//! - Supports running a single task (currently, only "fortune" is supported)
+//! - Schedule task execution using cron-style expressions
+//! - Error handling for invalid cron-style expressions and unknown task names
+//! - Ability to run the task as many times as specified in the cron-style expression.
+//!
+//! ## Usage
+//!
+//! ```sh
+//! cron <task-name> [--expression <cron-style expression>]
+//! ```
+//!
+//! # Examples
+//!
+//! This command runs the `fortune` task every second.
+//! ```sh
+//! cron fortune --expression "* * * * * *"
+//! ```
+//! This command runs the `fortune` task every second.
+//! ```sh
+//! cron fortune
+//! ```
+//!
+//! ```sh
+//! $ cron fortune "1/10 * * * * *"
+//! $ fortune
+//! Understatement of the century:
+//! "Hello everybody out there using minix - I'm doing a (free) operating
+//!  system (just a hobby, won't be big and professional like gnu) for
+//!  386(486) AT clones"
+//!
+//!         - Linus Torvalds, August 1991
+//! $ fortune
+//! Sorry.  I forget what I was going to say.
+//! ...
+//! ```
+//! ## Default Values
+//!
+//! - If `expression` is not provided, the task runs every 10 seconds.
+//! - If `utility` is not provided, an error message is displayed.
+//!
+//! ## Error Handling
+//!
+//! - If an invalid cron-style expression is provided, an error message is displayed along with a
+//!   list of default values for cron expressions and a helpful ASCII art representation of a cron
+//!   expression.
+//! - If an unknown task name is provided, an error message is displayed.
+//!
+//! ## How it Works
+//!
+//! - The `run` function parses the command line arguments using the `xflags` crate.
+//! - It checks if the provided `expression` is a valid cron-style expression. If it's not, an error
+//!   message is displayed and the function returns an error.
+//! - If the `expression` is valid, the `run` function calls the `run_fortune_cmd` function and
+//!   passes the `expression` as an argument.
+//! - The `run_fortune_cmd` function creates an instance of `JobScheduler` and adds a new job to it
+//!   using the provided `expression`.
+//! - The function then enters a loop where it calls `sched.tick()` and sleeps for 500 milliseconds
+//!   between each iteration. This allows the task to run according to the provided `expression`.
+//!
+//! ## `cron` syntax
+//!
+//! The format for cron syntax is as follows:
+//!
+//! ```txt
+//! * * * * * *
+//! | | | | | |
+//! | | | | | ----- Day of week (0 - 7) (Sunday = both 0 and 7)
+//! | | | | ------- Month (1 - 12)
+//! | | | --------- Day of month (1 - 31)
+//! | | ----------- Hour (0 - 23)
+//! | ------------- Minute (0 - 59)
+//! --------------- Second (0 - 59)
+//! ```
+//!
+//! ## `cron` usage
 //!
 //! ```yml
 //! "0 0 * * * *" - Run every day at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
@@ -15,18 +99,6 @@
 //! "0 0 17 * * *" - Run every day at 5:00 PM (i.e. 17 hours, 0 minutes, 0 seconds).
 //! "0 0 12 * * *" - Run every day at noon (i.e. 12 hours, 0 minutes, 0 seconds).
 //! "0 0 0 * * 6" - Run every Saturday at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
-//! ```
-//! The format for cron syntax is as follows:
-//!
-//! ```txt
-//! * * * * * *
-//! | | | | | |
-//! | | | | | ----- Day of week (0 - 7) (Sunday = both 0 and 7)
-//! | | | | ------- Month (1 - 12)
-//! | | | --------- Day of month (1 - 31)
-//! | | ----------- Hour (0 - 23)
-//! | ------------- Minute (0 - 59)
-//! ------------- Second (0 - 59)
 //! ```
 
 use std::time::Duration;
@@ -49,7 +121,7 @@ const DEFAULT_EXPRESSION: &str = "1/10 * * * * *";
 /// # Usage
 ///
 /// ```sh
-/// ❯ cron fortune "1/10 * * * * *"
+/// $ cron fortune "1/10 * * * * *"
 /// $ fortune
 /// Understatement of the century:
 /// "Hello everybody out there using minix - I'm doing a (free) operating
