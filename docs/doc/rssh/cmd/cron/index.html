@@ -1,19 +1,64 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The code is a Rust program that runs a given shell utility using cron syntax to schedule the execution. The program parses the command line arguments to get the utility to run and the cron expression (if provided), and then creates a Schedule value from the expression string. If the expression string is not provided, a default value is used, which runs the command every 10 seconds. If the expression string is invalid, the program prints a default values chart and an ASCII art illustration of the cron syntax, and returns an error message.!"><title>rssh::cmd::cron - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-505eba68f310f6bf.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-f501212b8b071243.css"><link rel="stylesheet" disabled href="../../../static.files/dark-e92fc12c34ff89d3.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-c8c85693c8a4f9db.css"><script id="default-settings" ></script><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/main-364b95f387bc3166.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../../../rssh/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../../../rssh/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Module cron</a></h2><div class="sidebar-elems"><section><ul class="block"><li><a href="#functions">Functions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Module <a href="../../index.html">rssh</a>::<wbr><a href="../index.html">cmd</a>::<wbr><a class="mod" href="#">cron</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../../../src/rssh/cmd/cron.rs.html#1-276">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The code is a Rust program that runs a given shell utility using cron syntax to schedule the
-execution. The program parses the command line arguments to get the utility to run and the cron
-expression (if provided), and then creates a Schedule value from the expression string. If the
-expression string is not provided, a default value is used, which runs the command every 10
-seconds. If the expression string is invalid, the program prints a default values chart and an
-ASCII art illustration of the cron syntax, and returns an error message.!</p>
-<div class="example-wrap"><pre class="language-yml"><code>&quot;0 0 * * * *&quot; - Run every day at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
-&quot;0 0 0 * * *&quot; - Run once per day, at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
-&quot;0 0 * * 0 *&quot; - Run every Sunday at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
-&quot;0 0 0 1 * *&quot; - Run once per month, on the first day of the month at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
-&quot;0 0 0 1 1 *&quot; - Run once per year, on January 1st at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
-&quot;0 0 9 * * *&quot; - Run every day at 9:00 AM (i.e. 9 hours, 0 minutes, 0 seconds).
-&quot;0 0 17 * * *&quot; - Run every day at 5:00 PM (i.e. 17 hours, 0 minutes, 0 seconds).
-&quot;0 0 12 * * *&quot; - Run every day at noon (i.e. 12 hours, 0 minutes, 0 seconds).
-&quot;0 0 0 * * 6&quot; - Run every Saturday at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="`cron` is a Command Line Utility for Running a Task According to a Schedule"><title>rssh::cmd::cron - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-505eba68f310f6bf.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../../static.files/light-f501212b8b071243.css"><link rel="stylesheet" disabled href="../../../static.files/dark-e92fc12c34ff89d3.css"><link rel="stylesheet" disabled href="../../../static.files/ayu-c8c85693c8a4f9db.css"><script id="default-settings" ></script><script src="../../../static.files/storage-3891ce972e3a2bf8.js"></script><script defer src="../../../static.files/main-364b95f387bc3166.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="logo-container" href="../../../rssh/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2></h2></nav><nav class="sidebar"><a class="logo-container" href="../../../rssh/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><h2 class="location"><a href="#">Module cron</a></h2><div class="sidebar-elems"><section><ul class="block"><li><a href="#functions">Functions</a></li></ul></section></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Module <a href="../../index.html">rssh</a>::<wbr><a href="../index.html">cmd</a>::<wbr><a class="mod" href="#">cron</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="srclink" href="../../../src/rssh/cmd/cron.rs.html#1-348">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><h2 id="cron-is-a-command-line-utility-for-running-a-task-according-to-a-schedule"><a href="#cron-is-a-command-line-utility-for-running-a-task-according-to-a-schedule"><code>cron</code> is a Command Line Utility for Running a Task According to a Schedule</a></h2>
+<p>This module provides a simple implementation of a command line utility for scheduling a task to
+run at specific times. The task to be run and the schedule are specified as command line
+arguments.
+The utility uses the <a href="https://crates.io/crates/job_scheduler_ng">job_scheduler_ng</a> crate to schedule the task.</p>
+<h3 id="overview"><a href="#overview">Overview</a></h3>
+<p>The utility takes two command line arguments:</p>
+<ul>
+<li><code>utility</code> - the name of the task to run</li>
+<li><code>expression</code> - a cron-style expression that specifies the schedule for running the task.</li>
+</ul>
+<h3 id="features"><a href="#features">Features</a></h3>
+<ul>
+<li>Supports running a single task (currently, only “fortune” is supported)</li>
+<li>Schedule task execution using cron-style expressions</li>
+<li>Error handling for invalid cron-style expressions and unknown task names</li>
+<li>Ability to run the task as many times as specified in the cron-style expression.</li>
+</ul>
+<h3 id="usage"><a href="#usage">Usage</a></h3><div class="example-wrap"><pre class="language-sh"><code>cron &lt;task-name&gt; [--expression &lt;cron-style expression&gt;]
+</code></pre></div><h2 id="examples"><a href="#examples">Examples</a></h2>
+<p>This command runs the <code>fortune</code> task every second.</p>
+<div class="example-wrap"><pre class="language-sh"><code>cron fortune --expression &quot;* * * * * *&quot;
 </code></pre></div>
+<p>This command runs the <code>fortune</code> task every second.</p>
+<div class="example-wrap"><pre class="language-sh"><code>cron fortune
+</code></pre></div><div class="example-wrap"><pre class="language-sh"><code>$ cron fortune &quot;1/10 * * * * *&quot;
+$ fortune
+Understatement of the century:
+&quot;Hello everybody out there using minix - I&#39;m doing a (free) operating
+ system (just a hobby, won&#39;t be big and professional like gnu) for
+ 386(486) AT clones&quot;
+
+        - Linus Torvalds, August 1991
+$ fortune
+Sorry.  I forget what I was going to say.
+...
+</code></pre></div><h3 id="default-values"><a href="#default-values">Default Values</a></h3>
+<ul>
+<li>If <code>expression</code> is not provided, the task runs every 10 seconds.</li>
+<li>If <code>utility</code> is not provided, an error message is displayed.</li>
+</ul>
+<h3 id="error-handling"><a href="#error-handling">Error Handling</a></h3>
+<ul>
+<li>If an invalid cron-style expression is provided, an error message is displayed along with a
+list of default values for cron expressions and a helpful ASCII art representation of a cron
+expression.</li>
+<li>If an unknown task name is provided, an error message is displayed.</li>
+</ul>
+<h3 id="how-it-works"><a href="#how-it-works">How it Works</a></h3>
+<ul>
+<li>The <code>run</code> function parses the command line arguments using the <code>xflags</code> crate.</li>
+<li>It checks if the provided <code>expression</code> is a valid cron-style expression. If it’s not, an error
+message is displayed and the function returns an error.</li>
+<li>If the <code>expression</code> is valid, the <code>run</code> function calls the <code>run_fortune_cmd</code> function and
+passes the <code>expression</code> as an argument.</li>
+<li>The <code>run_fortune_cmd</code> function creates an instance of <code>JobScheduler</code> and adds a new job to it
+using the provided <code>expression</code>.</li>
+<li>The function then enters a loop where it calls <code>sched.tick()</code> and sleeps for 500 milliseconds
+between each iteration. This allows the task to run according to the provided <code>expression</code>.</li>
+</ul>
+<h3 id="cron-syntax"><a href="#cron-syntax"><code>cron</code> syntax</a></h3>
 <p>The format for cron syntax is as follows:</p>
 <div class="example-wrap"><pre class="language-txt"><code>* * * * * *
 | | | | | |
@@ -22,6 +67,15 @@ ASCII art illustration of the cron syntax, and returns an error message.!</p>
 | | | --------- Day of month (1 - 31)
 | | ----------- Hour (0 - 23)
 | ------------- Minute (0 - 59)
-------------- Second (0 - 59)
+--------------- Second (0 - 59)
+</code></pre></div><h3 id="cron-usage"><a href="#cron-usage"><code>cron</code> usage</a></h3><div class="example-wrap"><pre class="language-yml"><code>&quot;0 0 * * * *&quot; - Run every day at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
+&quot;0 0 0 * * *&quot; - Run once per day, at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
+&quot;0 0 * * 0 *&quot; - Run every Sunday at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
+&quot;0 0 0 1 * *&quot; - Run once per month, on the first day of the month at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
+&quot;0 0 0 1 1 *&quot; - Run once per year, on January 1st at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
+&quot;0 0 9 * * *&quot; - Run every day at 9:00 AM (i.e. 9 hours, 0 minutes, 0 seconds).
+&quot;0 0 17 * * *&quot; - Run every day at 5:00 PM (i.e. 17 hours, 0 minutes, 0 seconds).
+&quot;0 0 12 * * *&quot; - Run every day at noon (i.e. 12 hours, 0 minutes, 0 seconds).
+&quot;0 0 0 * * 6&quot; - Run every Saturday at midnight (i.e. 0 hours, 0 minutes, 0 seconds).
 </code></pre></div></div></details><h2 id="functions" class="small-section-header"><a href="#functions">Functions</a></h2><div class="item-table"><div class="item-row"><div class="item-left"><a class="fn" href="fn.run.html" title="fn rssh::cmd::cron::run">run</a></div><div class="item-right docblock-short">It uses the <code>xflags</code> crate to parse the command line arguments, specifically the required
 <code>utility</code> argument and the optional <code>expression</code> argument.</div></div></div></section></div></main><div id="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="rssh" data-themes="" data-resource-suffix="" data-rustdoc-version="1.69.0-nightly (658fad6c5 2023-02-03)" data-search-js="search-98d53477a794af0b.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" ></div></body></html>
