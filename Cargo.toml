@@ -7,15 +7,27 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.68"
+chrono = "0.4.23"
+cron = "0.12.0"
+# crony = "0.3.0"
+job_scheduler_ng = "2.0.4"
 xflags = "0.3.1"
 xshell = "0.2.3"
 
+[dependencies.nom]
+version = "7.1.3" # version = "6.2.1"
+
+# This will use the version of the nom package located at the specified Git repository URL instead of using the version from the official crates.io repository.
+# [patch.crates-io]
+# nom = { version = "4.1.1", git = "https://github.com/Geal/nom" }
+
 [profile.dev]
 panic = "abort"
+debug = true
 
 [profile.release]
-panic = "abort" # abort rather than inwind which removes extra unwinding code
-lto = true # Enable link time optimization
-strip = true # Automatically strip symbols from the binary (major impact)
-opt-level = "z" # Optimize for size
+panic = "abort"   # abort rather than inwind which removes extra unwinding code
+lto = true        # Enable link time optimization
+strip = true      # Automatically strip symbols from the binary (major impact)
+opt-level = "z"   # Optimize for size
 codegen-units = 1 # Reduce parallel code generation units
