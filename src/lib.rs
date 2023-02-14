@@ -12,6 +12,7 @@ pub use crate::cmd::*;
 
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     ("amend", amend::run),   // git commit --amend --no-edit
+    ("await", awaiter::run), // fd . 'scripts/' | entr -c -s "ls"
     ("commit", commit::run), // git commit
     ("cron", cron::run),     // cron reminders
     ("gg", gg::run),         // gitui

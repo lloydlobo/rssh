@@ -7,12 +7,11 @@ max_width = 100
 use_field_init_shorthand = true
 
 # Unstable (requires nightly rust).
+# imports_layout = "Vertical"
 comment_width = 200
 condense_wildcard_suffixes = true
 format_code_in_doc_comments = true
 format_strings = true
 group_imports = "StdExternalCrate"
 imports_granularity = "Crate"
-# imports_layout = "Vertical"
 wrap_comments = true
-
