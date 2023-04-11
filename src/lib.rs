@@ -17,6 +17,7 @@ pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     ("cron", cron::run),     // cron reminders
     ("gg", gg::run),         // gitui
     ("go", go::run),         // go to
+    ("tldrf", tldrf::run),   // tealdeer cheatsheet fzf interface.
 ];
 
 pub fn build_link() -> anyhow::Result<()> {
