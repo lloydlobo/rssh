@@ -11,13 +11,14 @@ use xshell::{cmd, Shell};
 pub use crate::cmd::*;
 
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
-    ("amend", amend::run),   // git commit --amend --no-edit
-    ("await", awaiter::run), // fd . 'scripts/' | entr -c -s "ls"
-    ("commit", commit::run), // git commit
-    ("cron", cron::run),     // cron reminders
-    ("gg", gg::run),         // gitui
-    ("go", go::run),         // go to
-    ("tldrf", tldrf::run),   // tealdeer cheatsheet fzf interface.
+    ("amend", amend::run),         // git commit --amend --no-edit.
+    ("await", awaiter::run),       // fd . 'scripts/' | entr -c -s "ls".
+    ("commit", commit::run),       // git commit.
+    ("cron", cron::run),           // cron reminders.
+    ("gg", gg::run),               // gitui.
+    ("go", go::run),               // go to any [location/edit-note].
+    ("swapoffon", swapoffon::run), // disable and enable all swap areas.
+    ("tldrf", tldrf::run),         // tealdeer cheatsheet fzf interface.
 ];
 
 pub fn build_link() -> anyhow::Result<()> {
