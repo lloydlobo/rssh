@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: Deploy Pages
 on:
   # Runs on pushes targeting the default branch
   push:
@@ -16,40 +16,101 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 jobs:
-  createFile:
-    name: Create A File
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: 1arp/create-a-file-action@0.2
-        with:
-          path: "docs/doc"
-          file: "index.html"
-          content: "<meta http-equiv=\"refresh\" content=\"0; url=rssh\">  \n"
   # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    # - Checkout: Checkout the repository's code to the runner's file system.
+    # - Build cargo docs in docs/rustdoc: Build the cargo documentation and store it in the "./docs/rustdoc" folder.
+    # - Create index.html in docs/rustdoc/doc: Create an "index.html" file in the "./docs/rustdoc/doc" folder which redirects to the "rssh" page.
+    # - Commit and push changes: Uses the actions/github-script@v6 action to run a script that stages all changes, sets the user email and name, creates a commit with the message "docs: add index.html and build cargo docs", and pushes the changes to the master branch on the remote repository.
+    # - Setup Pages: Configure the GitHub Pages for the repository.
+    # - Upload artifact: Upload the artifact "./docs/doc".
+    # - Deploy to GitHub Pages: Deploy the documentation to the GitHub Pages.
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Build cargo docs in docs/rustdoc
+        run: |
+          cargo doc --no-deps --release --target-dir docs/rustdoc
+          # TODO: # && rm -rf docs/rustdoc/release && cp docs/rustdoc/doc docs/rustdoc && rm -rf docs/rustdoc/doc
+      - name: Create index.html in docs/rustdoc/doc
+        run: |
+          echo "<meta http-equiv=\"refresh\" content=\"0; url=rssh\">" > ./docs/rustdoc/doc/index.html
+      # - name: Commit and push changes
+      #   uses: actions/github-script@v6
+      #   with:
+      #     script: |
+      #       git add .
+      #       git config --local user.email "action@github.com"
+      #       git config --local user.name "GitHub Action"
+      #       git commit -m "docs: add index.html and build cargo docs"
+      #       git push origin master
+      # # unidentified alias "**"
+      #     github-token: ***
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
-          path: "./docs/doc"
+          path: "./docs/rustdoc/doc"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-# name: Create A File
-# # This workflow is triggered on pushes to the repository.
+# # Simple workflow for deploying static content to GitHub Pages
+# name: Deploy static content to Pages
 # on:
+#   # Runs on pushes targeting the default branch
 #   push:
-#     branches:
-#       - master
-
+#     branches: ["master"]
+#   # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
+# # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# permissions:
+#   contents: read
+#   pages: write
+#   id-token: write
+# # Allow one concurrent deployment
+# concurrency:
+#   group: "pages"
+#   cancel-in-progress: true
 # jobs:
+#   createFile:
+#     name: Create A File
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: 1arp/create-a-file-action@0.2
+#         with:
+#           path: "docs/doc"
+#           file: "index.html"
+#           content: "<meta http-equiv=\"refresh\" content=\"0; url=rssh\">  \n"
+#   # Single deploy job since we're just deploying
+#   deploy:
+#     environment:
+#       name: github-pages
+#       url: ${{ steps.deployment.outputs.page_url }}
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
+#       - name: Setup Pages
+#         uses: actions/configure-pages@v3
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v1
+#         with:
+#           # Upload entire repository
+#           path: "./docs/doc"
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v1
+# # name: Create A File
+# # # This workflow is triggered on pushes to the repository.
+# # on:
+# #   push:
+# #     branches:
+# #       - master
+#
+# # jobs:
