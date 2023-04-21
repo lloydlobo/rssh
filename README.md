@@ -3,11 +3,18 @@
 [![Rust](https://github.com/lloydlobo/rssh/actions/workflows/ci.yml/badge.svg)](https://github.com/lloydlobo/rssh/actions/workflows/ci.yml)
 [![Deploy static content to Pages](https://github.com/lloydlobo/rssh/actions/workflows/static.yml/badge.svg)](https://github.com/lloydlobo/rssh/actions/workflows/static.yml)
 
-## TODO
+## Usage
 
-- [ ] Create ~/bin/
-- [ ] Create ~/config/
-- [ ] Create ~/config/home/
+```shell
+# Install `rssh` binary in your CARGO path.
+$ cargo install --path .
+
+# Initializes and hardlinks all the mini utility `cmd` binaries to the shell.
+$ rssh
+
+# Run any of the commands in the rssh/src/cmd/ directory.
+$ <cmd>
+```
 
 ## Profiling
 
@@ -58,3 +65,7 @@ perf report
 ```
 
 This will give a detailed report of the performance of the program and help identify performance bottlenecks.
+
+## Credits
+
+- Thanks to @matklad with xtools and repository for `rssh`'s' "starter".
