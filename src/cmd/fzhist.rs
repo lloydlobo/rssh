@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use anyhow::Result;
 use xshell::{cmd, Shell};
 
@@ -29,14 +31,25 @@ pub fn run(sh: &Shell) -> Result<()> {
     let history: String = cmd!(sh, "cat {history_file_path}").read()?;
 
     // Interactively display the contents of the history file in fzf
-    // cmd!(sh, "fzf --height 40% --reverse --tac").stdin(output).run()?;
     let selected_cmd = cmd!(sh, "fzf --height 40% --reverse --tac").stdin(history).read()?;
 
     // Copy the selected command to clipboard.
-    let _clipboard = cmd!(sh, "xsel -ib").stdin(selected_cmd.to_string()).run()?;
+    cmd!(sh, "xsel -ib").stdin(&selected_cmd).output()?;
+
+    println!("Copied command `{}` to your clipboard.", &selected_cmd);
+
+    print!("Press [Ctrl/Cmd + Shift/Option + v] to paste it.");
+
+    // Flush the selected command to stdout in real-time
+    // let mut stdout = std::io::stdout();
+    // writeln!(stdout, "{}", &selected_cmd)?;
+    // stdout.flush()?;
 
     Ok(())
 }
+
+// let clipboard = cmd!(sh, "xsel -ob").output()?;
+// std::io::stdout().write_all(clipboard.stdout.as_bytes())?;
 
 // NOTE: if `$ history` command works, remove line numbers in the first column.
 //

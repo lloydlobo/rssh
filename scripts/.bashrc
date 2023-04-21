@@ -29,6 +29,14 @@ alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-win
 export VISUAL=nvim
 export EDITOR=nvim
 
+# ```shell
+# $ set -o vi   # Enable Vi editing mode
+# $ ls          # Use Vi commands to edit the command
+# $ Esc k       # Move to previous command in history
+# $ set +o vi   # Disable Vi editing mode
+# $ ls          # Regular command-line interface
+# ```
+
 unset rc
 . "$HOME/.cargo/env"
 
@@ -64,3 +72,43 @@ case ":$PATH:" in
 *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# Press Ctrl + R to open the reverse search prompt.
+#
+# Type in a search term and press Enter.
+#
+# The fzf utility will open a fuzzy search interface with your command history filtered by the search term.
+#
+# Use the arrow keys to navigate the search results and select a command.
+#
+# Press Enter to execute the selected command.
+#
+# Bind fzf to Ctrl+R for reverse history search
+if [[ $- =~ .*i.* ]]; then
+	bind -x '"\C-r": fzf-history-widget'
+fi
+# Define the fzf-history-widget function
+function fzf-history-widget() {
+	local cmd
+	cmd=$(history | awk '{$1=""; print $0}' | fzf --height 40% --reverse --tac)
+	if [[ -n $cmd ]]; then
+		# echo -n "$cmd" | xclip -selection clipboard
+		echo -n "$cmd" | xsel -ib # copy to clipboard (not primary)
+		# This causes the selected command to be inserted at the current cursor position in the shell's input buffer.
+		READLINE_LINE="$cmd"
+		READLINE_POINT=${#READLINE_LINE}
+	fi
+}
+
+## zsh
+# Bind fzf to Ctrl+R for reverse history search
+# if [[ -n "$(command -v fzf)" ]]; then
+# 	bindkey '^r' fzf-history-widget
+# 	zle -N fzf-history-widget
+# fi
+
+# if [[ -n "$(command -v fzf)" ]]; then: checks if the fzf utility is installed on the system.
+# if [[ -n "$(command -v fzf)" ]]; then
+# 	echo "fzhist: fzf reverse search on steroids"
+# 	bind -x '"\C-r": "$(fc -l 1 | fzf | sed '\''s/^[[:space:]]*//'\'' | cut -d '\'' '\'' -f 2-)"'
+# fi
