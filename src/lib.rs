@@ -15,6 +15,7 @@ pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     ("await", awaiter::run),       // fd . 'scripts/' | entr -c -s "ls".
     ("commit", commit::run),       // git commit.
     ("cron", cron::run),           // cron reminders.
+    ("fzhist", fzhist::run),       // fzhist: fzf reverse-search history on steroids.
     ("gg", gg::run),               // gitui.
     ("go", go::run),               // go to any [location/edit-note].
     ("swapoffon", swapoffon::run), // disable and enable all swap areas.

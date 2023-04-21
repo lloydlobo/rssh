@@ -7,3 +7,4 @@ pub mod cron;
 pub mod awaiter;
 pub mod tldrf;
 pub mod swapoffon;
+pub mod fzhist;
