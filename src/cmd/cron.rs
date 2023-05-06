@@ -183,20 +183,15 @@ fn run_fortune_cmd(expression: Schedule, signal: bool) -> Result<()> {
         cmd!(sh, "fortune").run().unwrap();
     }));
 
-    // FIXME:
-    // error: variables in the condition are not mutated in the loop body
-    //    --> src/cmd/cron.rs:186:11
-    //     |
-    // 186 |     while !signal {
-    //     |           ^^^^^^^
-    //     |
-    //     = note: this may lead to an infinite or to a never running loop
-    //     = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#while_immutable_condition
-    //     = note: `#[deny(clippy::while_immutable_condition)]` on by default
-    while !signal {
+    'l: loop {
+        if signal {
+            break 'l;
+        }
+
         sched.tick();
         std::thread::sleep(Duration::from_millis(500));
     }
+
     Ok(())
 }
 

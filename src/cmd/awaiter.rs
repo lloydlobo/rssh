@@ -11,7 +11,7 @@ pub fn run(sh: &Shell) -> anyhow::Result<()> {
 
     let command: String = flags.command;
     let opts: &str = flags.flags.as_deref().unwrap_or("-c");
-    let opts = format!("{opts}");
+    let opts = opts.to_string();
     cmd!(sh, "funzzy watch {opts} {command}").run()?;
 
     Ok(())
