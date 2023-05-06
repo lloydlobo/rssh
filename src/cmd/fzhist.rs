@@ -1,6 +1,6 @@
-use std::io::Write;
+use std::{io::Read, path::PathBuf};
 
-use anyhow::Result;
+use anyhow::{anyhow, Context, Result};
 use xshell::{cmd, Shell};
 
 /// `fzhist`: Reads the contents of the bash history file and display them in `fzf` (Command-line
@@ -22,28 +22,55 @@ use xshell::{cmd, Shell};
 /// Press Enter to execute the selected command.
 ///
 /// NOTE: It is similar to binding fzf to Ctrl+R for reverse history search.
-/// ```
 pub fn run(sh: &Shell) -> Result<()> {
-    // Path to the bash history file.
-    let history_file_path: &str = "/home/lloyd/.bash_history";
+    let mut shell = std::env::var("SHELL").unwrap_or_else(|_| "".to_string());
 
-    // Read the contents of the history file.
-    let history: String = cmd!(sh, "cat {history_file_path}").read()?;
+    shell = match shell.as_str() {
+        s if s.ends_with("bash") => "bash",
+        s if s.ends_with("zsh") => "zsh",
+        _ => "bash",
+    }
+    .to_string();
 
-    // Interactively display the contents of the history file in fzf
+    let mut history_file_path = PathBuf::new();
+    let base_path = std::env::var("HOME").unwrap_or_default(); // PERF: Is this secure?
+    history_file_path.push(&base_path);
+    match &shell[..] {
+        "bash" => history_file_path.push(".bash_history"),
+        "zsh" => history_file_path.push(".zsh_history"),
+        _ => return Err(anyhow!("Unknown shell: {}", shell)),
+    }
+
+    let mut history = String::new();
+    std::fs::File::open(&history_file_path)?.read_to_string(&mut history).with_context(|| {
+        anyhow!(format!("Should open history file: `{}`", history_file_path.display()))
+    })?;
+    history = history
+        .lines()
+        .map(|line| {
+            #[allow(clippy::single_char_pattern)]
+            let args = line.splitn(2, ";").collect::<Vec<_>>();
+            match args.last() {
+                Some(arg) => arg.trim().to_owned(),
+                None => args.first().unwrap().to_owned().to_string(),
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    // Interactively display the contents of the history file in fzf by
+    // passing history slice to the standard input of the spawned process.
     let selected_cmd = cmd!(sh, "fzf --height 40% --reverse --tac").stdin(history).read()?;
-
+    if selected_cmd.is_empty() {
+        return Ok(());
+    }
     // Copy the selected command to clipboard.
     cmd!(sh, "xsel -ib").stdin(&selected_cmd).output()?;
 
     println!("Copied command `{}` to your clipboard.", &selected_cmd);
-
-    print!("Press [Ctrl/Cmd + Shift/Option + v] to paste it.");
-
-    // Flush the selected command to stdout in real-time
-    // let mut stdout = std::io::stdout();
-    // writeln!(stdout, "{}", &selected_cmd)?;
-    // stdout.flush()?;
+    print!("Press [Ctrl/Cmd + Shift/Option + v] to paste and reuse.");
+    // TODO: Flush the selected command to stdout in real-time
+    // let mut stdout = std::io::stdout(); writeln!(stdout, "{}", &selected_cmd)?; stdout.flush()?;
 
     Ok(())
 }
@@ -87,3 +114,10 @@ pub fn run(sh: &Shell) -> Result<()> {
 //
 //     ok(())
 // }
+//
+// let is_zsh = shells.into_iter().find(|x| get_current_shell.contains(x));
+// dbg!(&get_current_shell, &is_zsh);
+// // let curr_shell = shells
+// //     .into_iter()
+// //     .find(|x| (*x).cmp(get_current_shell.as_str()) == Ordering::Equal)
+// //     .unwrap();

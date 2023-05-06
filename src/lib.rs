@@ -10,6 +10,18 @@ use xshell::{cmd, Shell};
 
 pub use crate::cmd::*;
 
+// FIXME:
+// warning: very complex type used. Consider factoring parts into `type` definitions
+//   --> src/lib.rs:13:21
+//    |
+// 13 | pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
+//    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//    |
+//    = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#type_complexity
+//    = note: `#[warn(clippy::type_complexity)]` on by default
+//
+// warning: `rssh` (lib) generated 1 warning
+// error: could not compile `rssh` (lib) due to previous error; 1 warning emitted
 pub const COMMANDS: &[(&str, fn(&Shell) -> anyhow::Result<()>)] = &[
     ("amend", amend::run),         // git commit --amend --no-edit.
     ("await", awaiter::run),       // fd . 'scripts/' | entr -c -s "ls".
