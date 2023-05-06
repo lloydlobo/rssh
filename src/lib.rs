@@ -10,8 +10,8 @@ use xshell::{cmd, Shell};
 
 pub use crate::cmd::*;
 
-type CommandExecuter<'a> = [(&'a str, fn(&Shell) -> anyhow::Result<()>)];
-pub const COMMANDS: &CommandExecuter = &[
+type CommandExecuter<'a> = (&'a str, fn(&Shell) -> anyhow::Result<()>);
+pub const COMMANDS: &[CommandExecuter] = &[
     ("amend", amend::run),         // git commit --amend --no-edit.
     ("await", awaiter::run),       // fd . 'scripts/' | entr -c -s "ls".
     ("commit", commit::run),       // git commit.
