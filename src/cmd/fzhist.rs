@@ -45,18 +45,20 @@ pub fn run(sh: &Shell) -> Result<()> {
     std::fs::File::open(&history_file_path)?.read_to_string(&mut history).with_context(|| {
         anyhow!(format!("Should open history file: `{}`", history_file_path.display()))
     })?;
-    history = history
-        .lines()
-        .map(|line| {
-            #[allow(clippy::single_char_pattern)]
-            let args = line.splitn(2, ";").collect::<Vec<_>>();
-            match args.last() {
-                Some(arg) => arg.trim().to_owned(),
-                None => args.first().unwrap().to_owned().to_string(),
-            }
-        })
-        .collect::<Vec<_>>()
-        .join("\n");
+    if shell.starts_with("zsh") {
+        history = history
+            .lines()
+            .map(|line| {
+                #[allow(clippy::single_char_pattern)]
+                let args = line.splitn(2, ";").collect::<Vec<_>>();
+                match args.last() {
+                    Some(arg) => arg.trim().to_owned(),
+                    None => args.first().unwrap().to_owned().to_string(),
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+    }
 
     // Interactively display the contents of the history file in fzf by
     // passing history slice to the standard input of the spawned process.
