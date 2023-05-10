@@ -5,7 +5,7 @@ plug "zap-zsh/supercharge"
 plug "zsh-users/zsh-syntax-highlighting"
 plug "wintermi/zsh-starship"
 plug "wintermi/zsh-rust"
-plug 'zsh-users/zsh-history-substring-search'
+# plug 'zsh-users/zsh-history-substring-search'
 
 # theme
 plug "zap-zsh/zap-prompt" 
@@ -16,6 +16,11 @@ plug "zap-zsh/zap-prompt"
 eval "$(zoxide init zsh)"
 
 eval "$(starship init zsh)"
+
+# The Fuck alias 
+alias yeet='thefuck'
+
+# alias for dc that runs cd instead.  # eval `thefuck --alias dc='cd'`
 
 # Source: Command Line Cheat Sheets by Elijah Manor.
 alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs tldr'
@@ -42,3 +47,15 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+
+
+# It's worth noting that zsh has its own built-in correction mechanism called correct. You can enable it by adding the following line to your .zshrc file:
+# 
+# setopt correct
+# 
+# With correct enabled, zsh will attempt to correct your command if it detects a spelling mistake or other error. You can also use the nocorrect command to disable correction for a specific command. For example:
+# 
+# nocorrect dc
+# 
+# This will prevent zsh from attempting to correct dc if it is mistyped.
