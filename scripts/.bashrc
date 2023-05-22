@@ -5,10 +5,6 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# CHEATSHEET
-#
-# - <C-c><Esc> or <C-c><C-[> (-> uses vim mode to scroll next previous reverse search)
-
 # User specific environment
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
 	PATH="$HOME/.local/bin:$HOME/bin:$PATH"
@@ -26,6 +22,27 @@ if [ -d ~/.bashrc.d ]; then
 		fi
 	done
 fi
+
+# more for less
+#
+# @source https://github.com/Mic92/dotfiles/blob/main/home/.bashrc
+export LESS=-R # use -X to avoid sending terminal initialization
+export LESS_TERMCAP_mb=$'\e[01;31m'
+export LESS_TERMCAP_md=$'\e[01;31m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[01;44;33m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[01;32m'# more for less
+
+# history
+#
+# @source https://github.com/Mic92/dotfiles/blob/main/home/.bashrc
+export HISTIGNORE="&:ls:[bf]g:exit:reset:clear:cd*"
+export HISTCONTROL="ignoreboth:erasedups"
+export HISTSIZE=1000
+export HISTFILESIZE=2000
+
 
 # Source: Command Line Cheat Sheets by Elijah Manor.
 alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs tldr'
@@ -77,6 +94,14 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+# region_start: deno
+#
+# Manually add the directory to your $HOME/.bashrc (or similar)
+export DENO_INSTALL="/home/lloyd/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+# Run '/home/lloyd/.deno/bin/deno --help' to get started
+# region_end: deno
+
 # Press Ctrl + R to open the reverse search prompt.
 #
 # Type in a search term and press Enter.
@@ -116,3 +141,4 @@ function fzf-history-widget() {
 # 	echo "fzhist: fzf reverse search on steroids"
 # 	bind -x '"\C-r": "$(fc -l 1 | fzf | sed '\''s/^[[:space:]]*//'\'' | cut -d '\'' '\'' -f 2-)"'
 # fi
+
