@@ -12,12 +12,6 @@ plug "zap-zsh/zap-prompt"
 
 # =============================================================================
 #
-# CHEATSHEET
-#
-# - <C-[> for cycling through prev/next history in zsh.
-
-# =============================================================================
-#
 # To initialize zoxide, add this to your configuration (usually ~/.zshrc):
 eval "$(zoxide init zsh)"
 
@@ -62,6 +56,34 @@ esac
 # Run '/home/lloyd/.deno/bin/deno --help' to get started
 # region_end: deno
 
+# FZF VIM OPENER
+# @source https://edward-rees.com/terminal-tricks/
+function __fsel_files() {
+  setopt localoptions pipefail no_aliases 2> /dev/null
+  #eval find ./ -type f -not -path '*/.git/*' -print | fzf -m "$@" | while read item; do
+  # if git repository:
+  # git ls-files
+ # eval find ./ -type f -print | fzf -m "$@" | while read item; do
+ eval fd | fzf -m "$!" | while read item; do
+    echo -n "${(q)item} "
+  done
+  local ret=$?
+  echo
+  return $ret
+}
+
+function fzf-vim {
+    selected=$(__fsel_files)
+    if [[ -z "$selected" ]]; then
+        zle redisplay
+        return 0
+    fi
+    zle push-line # Clear buffer
+    BUFFER="nvim $selected";
+    zle accept-line
+}
+zle -N fzf-vim
+bindkey "^v" fzf-vim
 
 
 # It's worth noting that zsh has its own built-in correction mechanism called correct. You can enable it by adding the following line to your .zshrc file:
@@ -73,4 +95,3 @@ esac
 # nocorrect dc
 #
 # This will prevent zsh from attempting to correct dc if it is mistyped.
-
