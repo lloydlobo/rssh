@@ -1,6 +1,7 @@
 # rssh
 
 [![Rust](https://github.com/lloydlobo/rssh/actions/workflows/ci.yml/badge.svg)](https://github.com/lloydlobo/rssh/actions/workflows/ci.yml)
+[![rust-clippy analyze](https://github.com/lloydlobo/rssh/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/lloydlobo/rssh/actions/workflows/rust-clippy.yml)
 [![Deploy static content to Pages](https://github.com/lloydlobo/rssh/actions/workflows/static.yml/badge.svg)](https://github.com/lloydlobo/rssh/actions/workflows/static.yml)
 
 ## Usage
